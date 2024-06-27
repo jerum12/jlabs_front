@@ -3,11 +3,22 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store, persistor } from './store/store'; // Import your configured store
+import { PersistGate } from 'redux-persist/integration/react';
+import { ToastContainer } from 'react-toastify';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+     <Provider store={store}>
+     <PersistGate loading={null} persistor={persistor}>
+    <BrowserRouter>
+    <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
     <App />
+    </BrowserRouter>
+    </PersistGate>
+    </Provider>
   </React.StrictMode>
 );
 

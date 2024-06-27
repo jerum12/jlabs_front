@@ -1,25 +1,65 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  createBrowserRouter,
+  Navigate,
+  Route,
+  Router,
+  RouterProvider,
+  Routes,
+} from "react-router-dom";
+import Login from "./components/Login";
+import ErrorPage from "./components/ErrorPage";
+import Register from "./components/Register";
+import SellerHome from "./components/SellerHome";
+import CustomerHome from "./components/CustomerHome";
+import { useSelector } from "react-redux";
+
+
+
 
 function App() {
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+//console.log("isLoggedIn",isLoggedIn);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/login" element={<Login />} />
+    <Route path='/register' element={<Register/>} />
+    {isLoggedIn ? (
+          <>
+               <Route path="/customerHome" element={<CustomerHome/>} />
+               <Route path="/sellerHome" element={<SellerHome/>} />
+          </>
+        ) : (
+          <Route path="*" element={<Navigate to="/" />} />
+        )}
+  </Routes>
+
+    )
+
+    const PrivateRoute = ({ children, isLoggedIn, userType, ...rest }) => {
+      return (
+        <Route
+          {...rest}
+          render={({ location }) =>
+            isLoggedIn ? (
+              // Check userType if needed (optional)
+              children
+            ) : (
+              <Navigate
+                to={{
+                  pathname: '/register',
+                  state: { from: location }
+                }}
+              />
+            )
+          }
+        />
+      );
+    };
+  
 }
 
 export default App;
